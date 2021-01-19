@@ -13,16 +13,18 @@ plugins {
 }
 
 group 'com.finflux'
-version '0.1.0'
+version '0.2.0'
 
-ext.versions = [
-        springcontext : '5.1.8.RELEASE',
-        springboot    : '1.5.21.RELEASE',
+ext { versions = [
+        springcontext : '5.2.6.RELEASE',
+        springboot    : '2.2.7.RELEASE',
         findbugs      : '3.0.1',
         frameworklang : '0.1.0-BUILD-SNAPSHOT',
-	cassandraVersion : '4.1.0',
-	lombokVersion : '1.18.2'
+	cassandraVersion : '4.6.1',
+	lombokVersion : '1.18.12'
 ]
+
+}
 
 apply plugin: 'java'
 apply plugin: 'idea' 
@@ -49,7 +51,8 @@ dependencies {
             [group: 'com.datastax.oss', name: 'java-driver-core', version: versions.cassandraVersion],
             [group: 'com.datastax.oss', name: 'java-driver-mapper-runtime', version: versions.cassandraVersion],
 	    	[group: 'com.datastax.oss', name: 'java-driver-query-builder', version: versions.cassandraVersion],
-	    	[group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3']
+	    	[group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'],
+	    	[group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.893']
     )
     
      compileOnly(
@@ -76,6 +79,14 @@ publishing {
             groupId project.group
             artifactId project.name
             version project.version
+        }
+    }
+    repositories {
+        maven {
+            url = 's3://finflux-maven-repository/releases'
+            authentication {
+              awsIm(AwsImAuthentication)
+           }
         }
     }
 }
